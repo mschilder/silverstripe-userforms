@@ -430,12 +430,24 @@ class UserDefinedForm_Controller extends Page_Controller {
 	public function init() {
 		parent::init();
 		
-		// load the jquery
-		Requirements::javascript(FRAMEWORK_DIR .'/thirdparty/jquery/jquery.js');
-		Requirements::javascript('userforms/thirdparty/jquery-validate/jquery.validate.js');
-		Requirements::add_i18n_javascript('userforms/javascript/lang');
-		Requirements::javascript('userforms/javascript/UserForm_frontend.js');
-		if($this->HideFieldLabels) Requirements::javascript('userforms/thirdparty/Placeholders.js/Placeholders.min.js');
+//		// load the jquery
+//		Requirements::javascript(FRAMEWORK_DIR .'/thirdparty/jquery/jquery.js');
+//		Requirements::javascript('userforms/thirdparty/jquery-validate/jquery.validate.js');
+//		Requirements::add_i18n_javascript('userforms/javascript/lang');
+//		Requirements::javascript('userforms/javascript/UserForm_frontend.js');
+//		if($this->HideFieldLabels) Requirements::javascript('userforms/thirdparty/Placeholders.js/Placeholders.min.js');
+		
+		// load the jquery using HeadJS
+		Requirements::customScript(<<<JS
+  		head.ready(function() {
+        head.js(
+          'userforms/thirdparty/jquery-validate/jquery.validate.js',
+          'userforms/javascript/UserForm_frontend.js',
+          'userforms/thirdparty/Placeholders.js/Placeholders.min.js'
+        );		  
+  		});
+JS
+    );
 	}
 	
 	/**
@@ -621,7 +633,7 @@ class UserDefinedForm_Controller extends Page_Controller {
 		
 		// set the custom script for this form
 		Requirements::customScript(<<<JS
-			(function($) {
+			head.ready(function() {
 				$(document).ready(function() {
 					$("#Form_Form").validate({
 						ignore: ':hidden',
@@ -642,7 +654,7 @@ class UserDefinedForm_Controller extends Page_Controller {
 					});
 					$hidelabels
 				});
-			})(jQuery);
+			});
 JS
 , 'UserFormsValidation');
 		
@@ -840,13 +852,13 @@ JS
 		// Only add customScript if $default or $rules is defined
     	if($default  || $rules) {
 			Requirements::customScript(<<<JS
-				(function($) {
+				head.ready(function() {
 					$(document).ready(function() {
 						$default
 
 						$rules
 					})
-				})(jQuery);
+				});
 JS
 , 'UserFormsConditional');
 		}
