@@ -583,12 +583,16 @@ JS
 		$clearText = ($this->ClearButtonText) ? $this->ClearButtonText : _t('UserDefinedForm.CLEARBUTTON', 'Clear');
 		
 		$actions = new FieldList(
-			new FormAction("process", $submitText)
+			$submitAction = new FormAction("process", $submitText)
 		);
+		
+		$submitAction->setUseButtonTag(true);
 
 		if($this->ShowClearButton) {
-			$actions->push(new ResetFormAction("clearForm", $clearText));
+			$actions->push($resetAction = new ResetFormAction("clearForm", $clearText));
 		}
+
+		$resetAction->setUseButtonTag(true);
 		
 		$this->extend('updateFormActions', $actions);
 		
