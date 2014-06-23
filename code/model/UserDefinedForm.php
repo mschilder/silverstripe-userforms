@@ -590,9 +590,8 @@ JS
 
 		if($this->ShowClearButton) {
 			$actions->push($resetAction = new ResetFormAction("clearForm", $clearText));
+			$resetAction->setUseButtonTag(true);
 		}
-
-		$resetAction->setUseButtonTag(true);
 		
 		$this->extend('updateFormActions', $actions);
 		
